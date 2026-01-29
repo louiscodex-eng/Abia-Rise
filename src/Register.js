@@ -1,5 +1,5 @@
 import { useState } from "react";
-import logo from "./logo2.png";
+import logo from "./abia-rise.png";
 import nigeriaStatesLGA from "./data/nigeriaStatesLGA";
 
 function Register() {
@@ -129,14 +129,14 @@ const [pdfUrl, setPdfUrl] = useState(null);
   <img
     src={logo}
     alt="Logo"
-    style={{ height: "150px" }}
+    style={{ height: "150px", borderRadius: "50%", border: "3px solid #ffffff" }}
     className="mb-2"
   />
   </div>
   </div>
 
      <div style={{ marginTop: "250px" }}>
-  <h3 className="text-center fw-bold">Labour Party</h3>
+  <h3 className="text-center fw-bold">Abia Rise</h3>
   <h5 className="text-center mb-3">
     Membership Registration Form
   </h5>
