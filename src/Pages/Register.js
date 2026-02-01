@@ -48,21 +48,22 @@ function Register() {
     setLoading(true);
     try {
       const payload = {
-        firstName,
-        middleName,
-        lastName,
-        dob,
-        email,
-        phoneNumber: phone,
-        NationalId: nin,
-        gender,
-        maritalStatus,
-        state,
-        lga,
-        ward,
-        isVoters,
-        country: "Nigeria",
-      };
+  firstName,
+  middleName,
+  lastName,
+  dob,
+  email,
+  phoneNumber: phone,
+  NationalId: nin,
+  gender,
+  maritalStatus,
+  state,
+  lga,
+  ward,
+  isVoters,
+  country: "Nigeria",
+};
+
       const response = await fetch(
         "https://govtregistrationapi.onrender.com/api/Registration/register",
         {
@@ -152,6 +153,7 @@ function Register() {
               <h6 className="fw-bold mb-3">Personal Details</h6>
               <div className="row g-3 mb-3">
                 <div className="col-md-6">
+                  <label className="form-label fw-medium">First Name</label>
                   <input
                     className="form-control"
                     placeholder="First Name"
@@ -161,6 +163,7 @@ function Register() {
                   />
                 </div>
                 <div className="col-md-6">
+                  <label className="form-label fw-medium">Middle Name</label>
                   <input
                     className="form-control"
                     placeholder="Middle Name"
@@ -172,6 +175,7 @@ function Register() {
 
               <div className="row g-3 mb-3">
                 <div className="col-md-6">
+                  <label className="form-label fw-medium">Last Name</label>
                   <input
                     className="form-control"
                     placeholder="Last Name"
@@ -181,6 +185,7 @@ function Register() {
                   />
                 </div>
                 <div className="col-md-6">
+                  <label className="form-label fw-medium">Email Address</label>
                   <input
                     type="email"
                     className="form-control"
@@ -193,72 +198,9 @@ function Register() {
               </div>
 
               <div className="row g-3 mb-3">
-                <div className="col-md-6">
-                  <label className="form-label fw-medium">Date of Birth</label>
-                  <input
-                    type="date"
-                    className="form-control"
-                    value={dob}
-                    onChange={(e) => setDob(e.target.value)}
-                    required
-                  />
-                </div>
-              </div>
-
+                {/* Citizenship */}
               <div className="row g-3 mb-3">
-                <div className="col-md-6">
-                  <input
-                    className="form-control"
-                    placeholder="Phone number"
-                    value={phone}
-                    onChange={(e) => setPhone(e.target.value)}
-                    required
-                  />
-                </div>
-                <div className="col-md-6">
-                  <input
-                    className="form-control"
-                    placeholder="National Identity Number"
-                    value={nin}
-                    onChange={(e) => setNin(e.target.value)}
-                    required
-                  />
-                </div>
-              </div>
-
-              {/* Gender & Marital Status */}
-              <div className="row g-3 mb-3">
-                <div className="col-md-6">
-                  <select
-                    className="form-select"
-                    value={gender}
-                    onChange={(e) => setGender(e.target.value)}
-                    required
-                  >
-                    <option value="">Gender</option>
-                    <option>Male</option>
-                    <option>Female</option>
-                  </select>
-                </div>
-                <div className="col-md-6">
-                  <select
-                    className="form-select"
-                    value={maritalStatus}
-                    onChange={(e) => setMaritalStatus(e.target.value)}
-                    required
-                  >
-                    <option value="">Marital Status</option>
-                    <option>Single</option>
-                    <option>Married</option>
-                    <option>Divorced</option>
-                    <option>Widow</option>
-                    <option>Widower</option>
-                  </select>
-                </div>
-              </div>
-
-              {/* Citizenship */}
-              <div className="row g-3 mb-3">
+                <h6 className="fw-bold mb-3">Citizenship Details</h6>
                 <div className="col-md-6">
                   <select
                     className="form-select"
@@ -283,6 +225,7 @@ function Register() {
               {isCitizen === "Yes" && (
                 <div className="row g-3 mb-3">
                   <div className="col-md-6">
+                    <label className="form-label fw-medium">State of Origin</label>
                     <select
                       className="form-select"
                       value={state}
@@ -303,6 +246,7 @@ function Register() {
                   </div>
 
                   <div className="col-md-6">
+                    <label className="form-label fw-medium">Local Government Area (LGA)</label>
                     <select
                       className="form-select"
                       value={lga}
@@ -321,6 +265,7 @@ function Register() {
                   </div>
 
                   <div className="col-md-6">
+                    <label className="form-label fw-medium">Select Ward</label>
                     <select
                       className="form-select"
                       value={ward}
@@ -344,11 +289,93 @@ function Register() {
                 </div>
               )}
 
+              </div>
+
+              <div className="row g-3 mb-3">
+                <div className="col-md-6">
+                  <label className="form-label fw-medium">Phone Number</label>
+                  <input
+                    className="form-control"
+                    placeholder="Phone number"
+                    value={phone}
+                    onChange={(e) => setPhone(e.target.value)}
+                    required
+                  />
+                </div>
+                <div className="col-md-6">
+                  <label className="form-label fw-medium">National Identity Number (NIN)</label>
+                  <input
+                    className="form-control"
+                    placeholder="National Identity Number"
+                    value={nin}
+                    onChange={(e) => setNin(e.target.value)}
+                    required
+                  />
+                </div>
+              </div>
+
+              {/* Gender & Marital Status */}
+              <div className="row g-3 mb-3">
+                <div className="col-md-6">
+                  <label className="form-label fw-medium">Gender</label>
+                  <select
+                    className="form-select"
+                    value={gender}
+                    onChange={(e) => setGender(e.target.value)}
+                    required
+                  >
+                    <option value="">Gender</option>
+                    <option>Male</option>
+                    <option>Female</option>
+                  </select>
+                </div>
+                <div className="col-md-6">
+                  <label className="form-label fw-medium">Marital Status</label>
+                  <select
+                    className="form-select"
+                    value={maritalStatus}
+                    onChange={(e) => setMaritalStatus(e.target.value)}
+                    required
+                  >
+                    <option value="">Marital Status</option>
+                    <option>Single</option>
+                    <option>Married</option>
+                    <option>Divorced</option>
+                    <option>Widow</option>
+                    <option>Widower</option>
+                  </select>
+                </div>
+              </div>
+
+              <div className="row g-3 mb-3">
+              <div className="col-md-6">
+                  <label className="form-label fw-medium">Date of Birth</label>
+                  <input
+                    type="date"
+                    className="form-control"
+                    value={dob}
+                    onChange={(e) => setDob(e.target.value)}
+                    required
+                  />
+                </div>
+                 {/* Passport Upload */}
+              <div className="mb-3">
+                <label className="form-label fw-bold">
+                  Upload Passport Photograph
+                </label>
+                <input
+                  type="file"
+                  className="form-control"
+                  accept="image/*"
+                  required
+                />
+              </div>
+              </div>
            
               {/* Voter & Membership */}
               <div className="row g-3 mb-3">
                 <div className="col-md-6">
-                  <select
+                  {/* <select
                     className="form-select"
                     value={isVoters}
                     onChange={(e) => setVoters(e.target.value)}
@@ -357,10 +384,11 @@ function Register() {
                     <option value="">Do you have a voters card?</option>
                     <option>Yes</option>
                     <option>No</option>
-                  </select>
+                  </select> */}
                   {isVoters === "Yes" && (
                     <div className="row g-3 mb-3">
                       <div className="col-md-6">
+                        <label className="form-label fw-medium">Voter's Card Number</label>
                         <input
                           className="form-control"
                           placeholder="Enter Voter's Card No."
@@ -371,6 +399,7 @@ function Register() {
                 </div>
 
                 <div className="col-md-6">
+                  <label className="form-label fw-medium">Country of Residence</label>
                   <select
                     className="form-select"
                     value={isNigeria}
@@ -392,6 +421,7 @@ function Register() {
 {isNigeria === "Nigeria" && (
   <div className="row g-3 mb-3">
     <div className="col-md-6">
+      <label className="form-label fw-medium">State of Residence</label>
       <select
         className="form-select"
         value={state}
@@ -417,6 +447,7 @@ function Register() {
 {isNigeria === "Other Country" && (
   <div className="row g-3 mb-3">
     <div className="col-md-6">
+      <label className="form-label fw-medium">Country of Residence</label>
       <select
         className="form-select"
         value={country}
@@ -434,19 +465,7 @@ function Register() {
   </div>
 )}
 
-              {/* Passport Upload */}
-              <div className="mb-3">
-                <label className="form-label fw-bold">
-                  Upload Passport Photograph
-                </label>
-                <input
-                  type="file"
-                  className="form-control"
-                  accept="image/*"
-                  required
-                />
-              </div>
-
+             
               {/* Terms */}
               <div className="mb-3">
                 <div className="form-check">
