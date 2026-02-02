@@ -3,6 +3,7 @@ import logo from "../abia-rise.png";
 import nigeriaStatesLGA from "../data/nigeriaStatesLGA";
 import nigeriaWards from "../data/nigeriaWards.json";
 import Navbar from "../components/Navbar";
+import residenceInfo from "../data/residenceInfo.js";
 
 function Register() {
   // ===== State =====
@@ -26,6 +27,8 @@ function Register() {
   const [wardsData, setWardsData] = useState({});
   const [loadingWards, setLoadingWards] = useState(true);
   const [isCitizen, setIsCitizen] = useState("");
+  const [passportFile, setPassportFile] = useState(null);
+  const [pdfUrl, setPdfUrl] = useState(null);
 
   // ===== Transform wards JSON =====
   useEffect(() => {
@@ -42,45 +45,92 @@ function Register() {
     setLoadingWards(false);
   }, []);
 
-  // ===== Submit =====
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setLoading(true);
-    try {
-      const payload = {
-  firstName,
-  middleName,
-  lastName,
-  dob,
-  email,
-  phoneNumber: phone,
-  NationalId: nin,
-  gender,
-  maritalStatus,
-  state,
-  lga,
-  ward,
-  isVoters,
-  country: "Nigeria",
+ // ===== Submit Function =====
+ const handleSubmit = async (e) => {
+  e.preventDefault();
+  setLoading(true);
+
+  try {
+    const formData = new FormData();
+
+    // ===== Personal Details =====
+    formData.append("FirstName", firstName);
+    formData.append("MiddleName", middleName);
+    formData.append("LastName", lastName);
+    formData.append("DOB", dob);
+    formData.append("Email", email);
+    formData.append("PhoneNumber", phone);
+    formData.append("NationalId", nin);
+    formData.append("Gender", gender);
+    formData.append("MaritalStatus", maritalStatus);
+
+    // ===== Residency =====
+    formData.append("IsCitizen", isCitizen);
+    formData.append("State", isCitizen === "Yes" ? state : "");
+    formData.append("LGA", isCitizen === "Yes" ? lga : "");
+    formData.append("Ward", isCitizen === "Yes" ? ward : "");
+
+    // ===== Voting =====
+    formData.append("IsVoters", isVoters);
+
+    // ===== Country =====
+    formData.append(
+      "Country",
+      isNigeria === "Nigeria" ? "Nigeria" : country
+    );
+
+    // ===== Passport Upload =====
+    if (passportFile) {
+      formData.append("passport", passportFile); // MUST match backend param
+    }
+
+    const response = await fetch(
+      "https://govtregistrationapi.onrender.com/api/Registration/register",
+      {
+        method: "POST",
+        body: formData, 
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error("Registration failed");
+    }
+
+    const data = await response.json();
+
+    // ===== Convert Base64 PDF to Blob =====
+    const pdfBlob = base64ToBlob(data.pdfBase64);
+    const pdfObjectUrl = URL.createObjectURL(pdfBlob);
+
+    setPdfUrl(pdfObjectUrl);
+    alert("Registration successful! ID card generated.");
+  } catch (error) {
+    console.error(error);
+    alert("Something went wrong. Please try again.");
+  } finally {
+    setLoading(false);
+  }
 };
 
-      const response = await fetch(
-        "https://govtregistrationapi.onrender.com/api/Registration/register",
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(payload),
-        }
-      );
-      if (!response.ok) throw new Error("Registration failed");
-      alert("Registration successful!");
-    } catch (error) {
-      console.error(error);
-      alert("Something went wrong. Please try again.");
-    } finally {
-      setLoading(false);
+
+function base64ToBlob(base64, contentType = "application/pdf") {
+  const byteCharacters = atob(base64);
+  const byteArrays = [];
+
+  for (let offset = 0; offset < byteCharacters.length; offset += 512) {
+    const slice = byteCharacters.slice(offset, offset + 512);
+    const byteNumbers = new Array(slice.length);
+
+    for (let i = 0; i < slice.length; i++) {
+      byteNumbers[i] = slice.charCodeAt(i);
     }
-  };
+
+    byteArrays.push(new Uint8Array(byteNumbers));
+  }
+
+  return new Blob(byteArrays, { type: contentType });
+}
+
 
   return (
     <>
@@ -225,7 +275,7 @@ function Register() {
               {isCitizen === "Yes" && (
                 <div className="row g-3 mb-3">
                   <div className="col-md-6">
-                    <label className="form-label fw-medium">State of Origin</label>
+                    <label className="form-label fw-medium">State</label>
                     <select
                       className="form-select"
                       value={state}
@@ -236,7 +286,7 @@ function Register() {
                       }}
                       required
                     >
-                      <option value="">Select State of origin</option>
+                      <option value="">State</option>
                       {Object.keys(nigeriaStatesLGA).map((stateName) => (
                         <option key={stateName} value={stateName}>
                           {stateName}
@@ -359,16 +409,19 @@ function Register() {
                   />
                 </div>
                  {/* Passport Upload */}
+               {/* Passport Upload */}
               <div className="mb-3">
                 <label className="form-label fw-bold">
                   Upload Passport Photograph
                 </label>
                 <input
-                  type="file"
+                    type="file"
                   className="form-control"
-                  accept="image/*"
-                  required
-                />
+                accept="image/*"
+                onChange={(e) => setPassportFile(e.target.files[0])}
+                      required
+                   />
+
               </div>
               </div>
            
@@ -433,7 +486,7 @@ function Register() {
         required
       >
         <option value="">Select State</option>
-        {Object.keys(nigeriaStatesLGA).map((stateName) => (
+        {Object.keys(residenceInfo).map((stateName) => (
           <option key={stateName} value={stateName}>
             {stateName}
           </option>
@@ -493,6 +546,31 @@ function Register() {
                   {loading ? "Submitting..." : "Register"}
                 </button>
               </div>
+       
+                       {pdfUrl && (
+  <div className="mt-4">
+    <h5 className="fw-bold text-center">Your Membership PDF</h5>
+
+    <iframe
+      src={pdfUrl}
+      title="Membership PDF"
+      width="100%"
+      height="600px"
+      style={{ border: "1px solid #ccc" }}
+    />
+
+    <div className="d-grid mt-3">
+      <a href={pdfUrl} download="membership.pdf">
+        <button className="btn btn-primary">
+          Download PDF
+        </button>
+      </a>
+    </div>
+  </div>
+)}
+
+
+
 
               <p className="text-muted small">
                 Note: This is a pre-membership registration form. You will be
