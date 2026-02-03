@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import Navbar from "../components/Navbar";
 import FormCard from "../components/FormCard";
 import useOtpTimer from "../components/useOtpTimer";
+import { toast } from "react-toastify";
 
 
 const ModifyDetails = () => {
@@ -10,24 +11,31 @@ const ModifyDetails = () => {
   const [otp, setOtp] = useState("");
   const [step, setStep] = useState(1);
   const { minutes, seconds, expired } = useOtpTimer();
+  
+
 
 
   const navigate = useNavigate();
 
   const handleProceed = () => {
-    // send OTP API
+    //navigate to the update details page with regId
     setStep(2);
   };
-
   const handleConfirm = () => {
-    // verify OTP API
-    navigate("/"); // redirect to registration page
-  };
+    toast.success("OTP confirmed! You can now modify your details.");
+    navigate("/update-details", { state: { regId } });
+  }
+
+  
+  
+
 
   return (
     <>
       <Navbar />
       <div className="container pt-4">
+       
+
         <FormCard title="Modify Membership Details">
           {step === 1 && (
             <>

@@ -4,6 +4,8 @@ import Register from "./Pages/Register";
 import Login from "./Pages/Login";
 import ModifyDetails from "./Pages/ModifyDetails";
 import ResetPassword from "./Pages/ResetPassword";
+import UpdateDetails from "./Pages/UpdateDetails";
+import Dashboard from "./Pages/Dashboard";
 
 function App() {
   return (
@@ -15,6 +17,8 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/modify-details" element={<ModifyDetails />} />
         <Route path="/reset-password" element={<ResetPassword />} />
+        <Route path="/update-details" element={<UpdateDetails />} />
+        <Route path="/dashboard" element={<Dashboard />} />
       </Routes>
     </Router>
   );

@@ -4,10 +4,11 @@ import nigeriaStatesLGA from "../data/nigeriaStatesLGA";
 import nigeriaWards from "../data/nigeriaWards.json";
 import Navbar from "../components/Navbar";
 import residenceInfo from "../data/residenceInfo.js";
+import { toast } from "react-toastify";
+import IDCard from "../components/IDCard";
 
 function Register() {
-  // ===== State =====
-  const [isVoters, setVoters] = useState("");
+  // ===== Personal Details =====
   const [firstName, setFirstName] = useState("");
   const [middleName, setMiddleName] = useState("");
   const [lastName, setLastName] = useState("");
@@ -17,20 +18,27 @@ function Register() {
   const [nin, setNin] = useState("");
   const [gender, setGender] = useState("");
   const [maritalStatus, setMaritalStatus] = useState("");
-  const [state, setState] = useState("");
-  const [lga, setLga] = useState("");
-  const [ward, setWard] = useState("");
-  const [country, setCountry] = useState("");
-  const [isNigeria, setIsNigeria] = useState("");
-  const [agreed, setAgreed] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [isCitizen, setIsCitizen] = useState("");
+  const [country, setCountry] = useState("");
+  const [residenceState] = useState("");
+  const [registeredUser, setRegisteredUser] = useState(null);
+
+  // ===== Other Details =====
+  const [lga, setLga] = useState("");
+  const [state, setState] = useState("");
+  const [ward, setWard] = useState("");
+  const [agreed, setAgreed] = useState(false);
+  const [isNigeria, setIsNigeria] = useState("");
+  const [isVoters, setVoters] = useState("");
+  const [votersCardNo] = useState("");
+  const [passportFile, setPassportFile] = useState(null);
+
+  // ===== Wards Data =====
   const [wardsData, setWardsData] = useState({});
   const [loadingWards, setLoadingWards] = useState(true);
-  const [isCitizen, setIsCitizen] = useState("");
-  const [passportFile, setPassportFile] = useState(null);
-  const [pdfUrl, setPdfUrl] = useState(null);
 
-  // ===== Transform wards JSON =====
+  // ===== Transform local JSON into usable wardsData =====
   useEffect(() => {
     const transformed = {};
     nigeriaWards.forEach((stateObj) => {
@@ -45,92 +53,133 @@ function Register() {
     setLoadingWards(false);
   }, []);
 
- // ===== Submit Function =====
- const handleSubmit = async (e) => {
-  e.preventDefault();
-  setLoading(true);
+  // ===== Submit Function =====
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
 
-  try {
-    const formData = new FormData();
+    // Debug: Log gender and marital status before sending
+    console.log("Gender before submit:", gender);
+    console.log("Marital Status before submit:", maritalStatus);
 
-    // ===== Personal Details =====
-    formData.append("FirstName", firstName);
-    formData.append("MiddleName", middleName);
-    formData.append("LastName", lastName);
-    formData.append("DOB", dob);
-    formData.append("Email", email);
-    formData.append("PhoneNumber", phone);
-    formData.append("NationalId", nin);
-    formData.append("Gender", gender);
-    formData.append("MaritalStatus", maritalStatus);
-
-    // ===== Residency =====
-    formData.append("IsCitizen", isCitizen);
-    formData.append("State", isCitizen === "Yes" ? state : "");
-    formData.append("LGA", isCitizen === "Yes" ? lga : "");
-    formData.append("Ward", isCitizen === "Yes" ? ward : "");
-
-    // ===== Voting =====
-    formData.append("IsVoters", isVoters);
-
-    // ===== Country =====
-    formData.append(
-      "Country",
-      isNigeria === "Nigeria" ? "Nigeria" : country
-    );
-
-    // ===== Passport Upload =====
-    if (passportFile) {
-      formData.append("passport", passportFile); // MUST match backend param
+    // Validate gender and marital status
+    if (!gender || gender === "") {
+      toast.error("Please select a gender", {
+        position: "top-right",
+        autoClose: 3000,
+      });
+      setLoading(false);
+      return;
     }
 
-    const response = await fetch(
-      "https://govtregistrationapi.onrender.com/api/Registration/register",
-      {
-        method: "POST",
-        body: formData, 
+    if (!maritalStatus || maritalStatus === "") {
+      toast.error("Please select a marital status", {
+        position: "top-right",
+        autoClose: 3000,
+      });
+      setLoading(false);
+      return;
+    }
+
+    try {
+      const formData = new FormData();
+
+      // ===== Personal Details =====
+      formData.append("FirstName", firstName);
+      formData.append("MiddleName", middleName);
+      formData.append("LastName", lastName);
+      formData.append("DOB", dob);
+      formData.append("Email", email);
+      formData.append("PhoneNumber", phone);
+      formData.append("NationalId", nin);
+      
+      // ===== FIXED: Ensure gender and marital status are sent =====
+      formData.append("Gender", gender);
+      formData.append("MaritalStatus", maritalStatus);
+
+      // ===== Residency =====
+      formData.append("IsCitizen", isCitizen);
+      formData.append("State", isCitizen === "Yes" ? state : "");
+      formData.append("LGA", isCitizen === "Yes" ? lga : "");
+      formData.append("Ward", isCitizen === "Yes" ? ward : "");
+
+      // ===== Voting =====
+      formData.append("IsVoters", isVoters);
+      if (isVoters === "Yes" && votersCardNo) {
+        formData.append("VotersCardNo", votersCardNo);
       }
-    );
 
-    if (!response.ok) {
-      throw new Error("Registration failed");
+      // ===== Country of Residence =====
+      formData.append("Country", isNigeria === "Nigeria" ? "Nigeria" : country);
+      
+      // ===== State of Residence =====
+      if (isNigeria === "Nigeria" && residenceState) {
+        formData.append("ResidenceState", residenceState);
+      }
+
+      // ===== Passport Upload =====
+      if (passportFile) {
+        formData.append("passport", passportFile);
+      }
+
+      // Debug: Log what's being sent
+      console.log("FormData contents:");
+      for (let [key, value] of formData.entries()) {
+        console.log(`${key}:`, value);
+      }
+
+      const response = await fetch(
+        "https://govtregistrationapi.onrender.com/api/Registration/register",
+        {
+          method: "POST",
+          body: formData,
+        }
+      );
+
+      const data = await response.json();
+
+      if (response.ok) {
+        // ===== SUCCESS TOAST =====
+        toast.success(
+          "Registration successful! Kindly download your membership card below. Dont forget to reset your password",
+          {
+            position: "top-right",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+          }
+        );
+
+        setRegisteredUser(data.data);
+      } else {
+        // ===== ERROR TOAST =====
+        toast.error(data.message || "Something went wrong, try again", {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+        });
+      }
+    } catch (error) {
+      console.error("Error during registration:", error);
+      
+      // ===== NETWORK ERROR TOAST =====
+      toast.error("Something went wrong, try again", {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+      });
+    } finally {
+      setLoading(false);
     }
-
-    const data = await response.json();
-
-    // ===== Convert Base64 PDF to Blob =====
-    const pdfBlob = base64ToBlob(data.pdfBase64);
-    const pdfObjectUrl = URL.createObjectURL(pdfBlob);
-
-    setPdfUrl(pdfObjectUrl);
-    alert("Registration successful! ID card generated.");
-  } catch (error) {
-    console.error(error);
-    alert("Something went wrong. Please try again.");
-  } finally {
-    setLoading(false);
-  }
-};
-
-
-function base64ToBlob(base64, contentType = "application/pdf") {
-  const byteCharacters = atob(base64);
-  const byteArrays = [];
-
-  for (let offset = 0; offset < byteCharacters.length; offset += 512) {
-    const slice = byteCharacters.slice(offset, offset + 512);
-    const byteNumbers = new Array(slice.length);
-
-    for (let i = 0; i < slice.length; i++) {
-      byteNumbers[i] = slice.charCodeAt(i);
-    }
-
-    byteArrays.push(new Uint8Array(byteNumbers));
-  }
-
-  return new Blob(byteArrays, { type: contentType });
-}
-
+  };
 
   return (
     <>
@@ -547,28 +596,7 @@ function base64ToBlob(base64, contentType = "application/pdf") {
                 </button>
               </div>
        
-                       {pdfUrl && (
-  <div className="mt-4">
-    <h5 className="fw-bold text-center">Your Membership PDF</h5>
-
-    <iframe
-      src={pdfUrl}
-      title="Membership PDF"
-      width="100%"
-      height="600px"
-      style={{ border: "1px solid #ccc" }}
-    />
-
-    <div className="d-grid mt-3">
-      <a href={pdfUrl} download="membership.pdf">
-        <button className="btn btn-primary">
-          Download PDF
-        </button>
-      </a>
-    </div>
-  </div>
-)}
-
+                      
 
 
 
@@ -581,6 +609,13 @@ function base64ToBlob(base64, contentType = "application/pdf") {
             )}
           </div>
         </div>
+
+          {/* Show ID Card after successful registration */}
+        {registeredUser && (
+          <div className="mt-4">
+            <IDCard user={registeredUser} />
+          </div>
+        )}
       </div>
     </>
   );

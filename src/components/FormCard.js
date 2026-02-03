@@ -1,4 +1,4 @@
-import logo from "../abia-rise.png";
+import logo from "./abia-rise.png";
 
 const FormCard = ({ title, children }) => {
   return (
