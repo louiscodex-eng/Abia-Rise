@@ -1,8 +1,9 @@
 import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
-import { QRCodeCanvas } from "qrcode.react";
+// import { QRCodeCanvas } from "qrcode.react";
 import logo from "./abia-rise.png";
 import "../App.css";
+import qrCode from "./qrcode.png";
 
 function IDCard({ user }) {
   const downloadPdf = async () => {
@@ -57,7 +58,7 @@ function IDCard({ user }) {
           height: "280px",
           position: "relative",
           overflow: "hidden",
-          backgroundColor: "#f4fff6",
+          backgroundColor: "#dbdbdb",
         }}
       >
         {/* 🔹 BACKGROUND IMAGE LAYER */}
@@ -65,7 +66,7 @@ function IDCard({ user }) {
           style={{
             position: "absolute",
             inset: 0,
-            backgroundImage: `url('/logo2.png')`,
+            backgroundImage: `url('/abia-rise.png')`,
             backgroundSize: "contain",
             backgroundRepeat: "no-repeat",
             backgroundPosition: "center",
@@ -147,9 +148,9 @@ function IDCard({ user }) {
                         textOverflow: "ellipsis",
                         verticalAlign: "bottom",
                       }}
-                      title={user.niN || user.NiN || user.NIN || user.NationalId}
+                      title={user.niN || user.NiN || user.NIN || user.nationalId}
                     >
-                      {user.niN || user.NiN || user.NIN || user.NationalId}
+                      {user.niN || user.NiN || user.NIN || user.nationalId}
                     </span>
                   </span>
                 </div>
@@ -199,26 +200,26 @@ function IDCard({ user }) {
 
                 {/* ROW 3 */}
                 <div style={{ display: "flex" }}>
-                  <span style={{ flex: "0 0 50%", marginLeft: "-34px", minWidth: 0 }}>
+                  <span style={{ flex: "0 0 50%", marginLeft: "-10px", minWidth: 0 }}>
                     <span className="fw-bold text-success">LGA: </span>
                     <span
                       className="truncate-text"
                       style={{
                         display: "inline-block",
-                        maxWidth: "150px",
+                        maxWidth: "100px",
                         whiteSpace: "nowrap",
                         overflow: "hidden",
                         textOverflow: "ellipsis",
                         verticalAlign: "bottom",
                       }}
-                      title={user.lga || user.LGA}
+                      title={user.lga}
                     >
-                      {user.lga || user.LGA}
+                      {user.lga}
                     </span>
                   </span>
                   <span style={{ flex: "0 0 50%", minWidth: 0 }}>
                     <span
-                      style={{ paddingLeft: "39px" }}
+                      style={{ paddingLeft: "30px" }}
                       className="fw-bold text-success"
                     >
                       Ward:{" "}
@@ -233,9 +234,9 @@ function IDCard({ user }) {
                         textOverflow: "ellipsis",
                         verticalAlign: "bottom",
                       }}
-                      title={user.ward || user.Ward}
+                      title={user.ward}
                     >
-                      {user.ward || user.Ward}
+                      {user.ward}
                     </span>
                   </span>
                 </div>
@@ -309,15 +310,27 @@ function IDCard({ user }) {
       </button>
 
       {/* QR CODE - Moved below download button */}
-      <div className="mt-3">
+      {/* <div className="mt-3">
         <p className="text-muted mb-2">Scan QR Code:</p>
         <QRCodeCanvas
-          value={user.regID || user.RegID}
+          value={user.regID}
           size={120}
           bgColor="#ffffff"
           fgColor="#198754"
         />
-      </div>
+      </div> */}
+      {/* QR CODE - Static PNG Image */}
+<div className="mt-3 text-center">
+  <p className="text-muted mb-2">Download using the CRONTOCODE Mobile App</p>
+
+  <img
+    src={qrCode}
+    alt="QR Code"
+    width={120}
+    height={120}
+  />
+</div>
+
     </div>
   );
 }

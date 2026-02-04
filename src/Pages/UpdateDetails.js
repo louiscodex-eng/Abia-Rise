@@ -25,7 +25,7 @@ function UpdateDetails() {
   const [agreed, setAgreed] = useState(false);
   const [isNigeria] = useState("");
   const [isVoters] = useState("");
-  const [ setPassportFile] = useState(null);
+  const [ setPassportUrl] = useState("");
   
   const [ setCountry] = useState("");
   // ===== Wards Data =====
@@ -512,7 +512,7 @@ useEffect(() => {
                   type="file"
                   className="form-control"
                   accept="image/*"
-                  onChange={(e) => setPassportFile(e.target.files[0])}
+                  onChange={(e) => setPassportUrl(e.target.files[0])}
                   required
                 />
               </div>

@@ -33,6 +33,7 @@ function Register() {
   const [isVoters, setVoters] = useState("");
   const [votersCardNo] = useState("");
   const [passportFile, setPassportFile] = useState(null);
+  const [residenceStates, setResidenceStates] = useState([]);
 
   // ===== Wards Data =====
   const [wardsData, setWardsData] = useState({});
@@ -526,11 +527,10 @@ function Register() {
       <label className="form-label fw-medium">State of Residence</label>
       <select
         className="form-select"
-        value={state}
+        value={residenceStates}
         onChange={(e) => {
-          setState(e.target.value);
-          setLga("");
-          setWard("");
+          setResidenceStates(e.target.value);
+          
         }}
         required
       >
