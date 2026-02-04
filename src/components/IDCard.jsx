@@ -3,7 +3,8 @@ import jsPDF from "jspdf";
 // import { QRCodeCanvas } from "qrcode.react";
 import logo from "./abia-rise.png";
 import "../App.css";
-import qrCode from "./qrcode.png";
+import qrCode from './qrcode.png';
+import signature from './signature.png';
 
 function IDCard({ user }) {
   const downloadPdf = async () => {
@@ -41,11 +42,11 @@ function IDCard({ user }) {
     pdf.save("labour-party-id-card.pdf");
   };
 
-  const formatDate = (dateString) => {
-    if (!dateString) return "";
-    const date = new Date(dateString);
-    return date.toLocaleDateString("en-GB");
-  };
+  // const formatDate = (dateString) => {
+  //   if (!dateString) return "";
+  //   const date = new Date(dateString);
+  //   return date.toLocaleDateString("en-GB");
+  // };
 
   return (
     <div className="text-center mt-5">
@@ -54,11 +55,11 @@ function IDCard({ user }) {
         id="id-card"
         className="border border-success rounded mx-auto"
         style={{
-          width: "515px",
+          width: "450px",
           height: "280px",
           position: "relative",
           overflow: "hidden",
-          backgroundColor: "#dbdbdb",
+          backgroundColor: "#f4fff6",
         }}
       >
         {/* 🔹 BACKGROUND IMAGE LAYER */}
@@ -66,7 +67,7 @@ function IDCard({ user }) {
           style={{
             position: "absolute",
             inset: 0,
-            backgroundImage: `url('/abia-rise.png')`,
+            backgroundImage: `url('/logo2.png')`,
             backgroundSize: "contain",
             backgroundRepeat: "no-repeat",
             backgroundPosition: "center",
@@ -94,194 +95,165 @@ function IDCard({ user }) {
 
             {/* TITLE */}
             <div className="flex-grow-1 text-center text-white">
-              <h2 className="mb-0 fw-bold">Abia Arise</h2>
-              <small>Arise for a new Abia!!</small>
+              <h2 className="mb-0 fw-bold">Labour Party</h2>
+              <small>Forward Ever!!</small>
             </div>
           </div>
 
           {/* BODY */}
           <div className="row">
             {/* DETAILS */}
-            <div className="col-8">
+            <div className="col-8 fw-medium text-start px-3">
               <div
                 style={{
                   display: "flex",
                   flexDirection: "column",
-                  gap: "10px",
-                  fontSize: "14px",
+                  gap: "2px",
+                  color: "#404040",
+
                 }}
               >
-                {/* ROW 1 */}
+               
+                {/* ROW  1 */}
                 <div style={{ display: "flex" }}>
-                  <span style={{ flex: "0 1 45%", minWidth: 0 }}>
-                    <span className="fw-bold text-success">Name: </span>
+                  <span>
+                    
                     <span
                       className="truncate-text"
                       style={{
                         display: "inline-block",
-                        maxWidth: "140px",
-                        whiteSpace: "nowrap",
-                        overflow: "hidden",
-                        textOverflow: "ellipsis",
-                        verticalAlign: "bottom",
+                        maxWidth: "430px",
+                        fontSize: "14px",
+                        //whiteSpace: "nowrap",
+                        //overflow: "hidden",
+                        //textOverflow: "ellipsis",
+                        //verticalAlign: "",
                       }}
-                      title={`${user.firstName || user.FirstName} ${user.lastName || user.LastName}`}
+                      title={`${user.regId || user.RegID}`}
                     >
-                      {user.firstName || user.FirstName}{" "}
-                      {user.lastName || user.LastName}
+                      {`Membership NO: ${user.regID || user.RegID}`}
                     </span>
                   </span>
-                  <span style={{ flex: "0 0 55%", minWidth: 0 }}>
-                    <span
-                      style={{ marginLeft: "30px" }}
-                      className="fw-bold text-success"
-                    >
-                      NIN:{" "}
-                    </span>
-                    <span
-                      className="truncate-text"
-                      style={{
-                        display: "inline-block",
-                        maxWidth: "110px",
-                        whiteSpace: "nowrap",
-                        overflow: "hidden",
-                        textOverflow: "ellipsis",
-                        verticalAlign: "bottom",
-                      }}
-                      title={user.niN || user.NiN || user.NIN || user.nationalId}
-                    >
-                      {user.niN || user.NiN || user.NIN || user.nationalId}
-                    </span>
-                  </span>
+                 
                 </div>
-
-                {/* ROW 2 */}
+                {/* row 2 */}
+               
                 <div style={{ display: "flex" }}>
-                  <span style={{ flex: "0 0 50%", minWidth: 0 }}>
-                    <span className="fw-bold text-success">RegID: </span>
+                  <span>
+                    
                     <span
                       className="truncate-text"
                       style={{
                         display: "inline-block",
-                        maxWidth: "130px",
-                        whiteSpace: "nowrap",
-                        overflow: "hidden",
-                        textOverflow: "ellipsis",
-                        verticalAlign: "bottom",
+                        maxWidth: "430px",
+                        fontSize: "14px",
+                        //whiteSpace: "nowrap",
+                        //overflow: "hidden",
+                        //textOverflow: "ellipsis",
+                        //verticalAlign: "",
                       }}
-                      title={user.regID || user.RegID}
+                      title={`${user.firstName} ${user.lastName} ${user.middleName || ""}`}
                     >
-                      {user.regID || user.RegID}
+                      {`Full Name: ${user.firstName} ${user.lastName} ${user.middleName || ""}`}
                     </span>
                   </span>
-                  <span style={{ flex: "0 0 50%", minWidth: 0 }}>
-                    <span
-                      style={{ marginLeft: "-5px" }}
-                      className="fw-bold text-success"
-                    >
-                      State:{" "}
-                    </span>
-                    <span
-                      className="truncate-text"
-                      style={{
-                        display: "inline-block",
-                        maxWidth: "100px",
-                        whiteSpace: "nowrap",
-                        overflow: "hidden",
-                        textOverflow: "ellipsis",
-                        verticalAlign: "bottom",
-                      }}
-                      title={user.state || user.State}
-                    >
-                      {user.state || user.State}
-                    </span>
-                  </span>
+                 
                 </div>
 
                 {/* ROW 3 */}
                 <div style={{ display: "flex" }}>
-                  <span style={{ flex: "0 0 50%", marginLeft: "-10px", minWidth: 0 }}>
-                    <span className="fw-bold text-success">LGA: </span>
+                  <span>
+                    
                     <span
                       className="truncate-text"
                       style={{
                         display: "inline-block",
-                        maxWidth: "100px",
-                        whiteSpace: "nowrap",
-                        overflow: "hidden",
-                        textOverflow: "ellipsis",
-                        verticalAlign: "bottom",
+                        maxWidth: "430px",
+                        fontSize: "14px",
+                        //whiteSpace: "nowrap",
+                        //overflow: "hidden",
+                        //textOverflow: "ellipsis",
+                        //verticalAlign: "",
                       }}
-                      title={user.lga}
+                      title={`${user.state}`}
                     >
-                      {user.lga}
-                    </span>
-                  </span>
-                  <span style={{ flex: "0 0 50%", minWidth: 0 }}>
-                    <span
-                      style={{ paddingLeft: "30px" }}
-                      className="fw-bold text-success"
-                    >
-                      Ward:{" "}
-                    </span>
-                    <span
-                      className="truncate-text"
-                      style={{
-                        display: "inline-block",
-                        maxWidth: "80px",
-                        whiteSpace: "nowrap",
-                        overflow: "hidden",
-                        textOverflow: "ellipsis",
-                        verticalAlign: "bottom",
-                      }}
-                      title={user.ward}
-                    >
-                      {user.ward}
+                      {`State: ${user.state}`}
                     </span>
                   </span>
                 </div>
 
-                {/* ROW 4 */}
+ {/* new row */}
                 <div style={{ display: "flex" }}>
-                  <span style={{ flex: "0 0 48%", marginLeft: "-12px", minWidth: 0 }}>
-                    <span className="fw-bold text-success">DOB: </span>
+                  <span>
+                    
                     <span
                       className="truncate-text"
                       style={{
                         display: "inline-block",
-                        maxWidth: "130px",
-                        whiteSpace: "nowrap",
-                        overflow: "hidden",
-                        textOverflow: "ellipsis",
-                        verticalAlign: "bottom",
+                        maxWidth: "430px",
+                        fontSize: "14px",
+                        //whiteSpace: "nowrap",
+                        //overflow: "hidden",
+                        //textOverflow: "ellipsis",
+                        //verticalAlign: "",
                       }}
-                      title={formatDate(user.dob || user.DOB)}
+                      title={`${user.lga}`}
                     >
-                      {formatDate(user.dob || user.DOB)}
+                      {`LGA: ${user.lga}`}
                     </span>
                   </span>
-                  <span style={{ flex: "0 0 52%", minWidth: 0 }}>
-                    <span
-                      style={{ marginLeft: "34px" }}
-                      className="fw-bold text-success"
-                    >
-                      Gender:{" "}
-                    </span>
+                 
+                </div>
+                
+
+                {/* new row */}
+                <div style={{ display: "flex" }}>
+                  <span>
+                    
                     <span
                       className="truncate-text"
                       style={{
                         display: "inline-block",
-                        maxWidth: "80px",
-                        whiteSpace: "nowrap",
-                        overflow: "hidden",
-                        textOverflow: "ellipsis",
-                        verticalAlign: "bottom",
+                        maxWidth: "430px",
+                        fontSize: "14px",
+                        //whiteSpace: "nowrap",
+                        //overflow: "hidden",
+                        //textOverflow: "ellipsis",
+                        //verticalAlign: "",
                       }}
-                      title={user.gender || user.Gender}
+                      title={`${user.niN}`}
                     >
-                      {user.gender || user.Gender}
+                      {`NIN: ${user.niN}`}
                     </span>
                   </span>
+                 
+                </div>
+                
+                
+                 {/* ROW 4 - Signature */}
+                <div style={{ display: "flex", alignItems: "center" }}>
+                  <div className="text-center">
+                    <img
+                      src={signature}
+                      alt="signature"
+                      style={{
+                        width: "100px",
+                        height: "auto",
+                        maxHeight: "50px",
+                        objectFit: "contain",
+                      }}
+                    />
+                    <div
+                      style={{
+                        fontSize: "11px",
+                        color: "#666",
+                        marginTop: "-15px",
+                        fontStyle: "italic",
+                      }}
+                    >
+                      Authorized Signatory
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -313,14 +285,13 @@ function IDCard({ user }) {
       {/* <div className="mt-3">
         <p className="text-muted mb-2">Scan QR Code:</p>
         <QRCodeCanvas
-          value={user.regID}
+          value={user.regID || user.RegID}
           size={120}
           bgColor="#ffffff"
           fgColor="#198754"
         />
       </div> */}
-      {/* QR CODE - Static PNG Image */}
-<div className="mt-3 text-center">
+      <div className="mt-3 text-center">
   <p className="text-muted mb-2">Download using the CRONTOCODE Mobile App</p>
 
   <img
@@ -330,7 +301,6 @@ function IDCard({ user }) {
     height={120}
   />
 </div>
-
     </div>
   );
 }
