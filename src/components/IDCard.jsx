@@ -99,7 +99,7 @@ function IDCard({ user }) {
               <small>Arise for a new Abia!!</small>
               {/* MEMBERSHIP NUMBER - Added below Forward Ever */}
               <div className="fw-bold" style={{ fontSize: "15px", marginTop: "2px" }}>
-                Membership No: {user.regID || user.RegID}
+               {user.regID || user.RegID}
               </div>
             </div>
 
@@ -298,7 +298,7 @@ function IDCard({ user }) {
         />
       </div> */}
       <div className="mt-3 text-center">
-  <p className="text-muted mb-2">Download using the CRONTOCODE Mobile App</p>
+  <p className="text-muted mb-2">Download the ID Card to your mobile phone</p>
 
   <img
     src={qrCode}
