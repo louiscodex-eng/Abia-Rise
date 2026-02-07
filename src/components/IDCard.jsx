@@ -67,7 +67,7 @@ function IDCard({ user }) {
           style={{
             position: "absolute",
             inset: 0,
-            backgroundImage: `url('/logo2.png')`,
+            backgroundImage: `url('/abia-rise.png')`,
             backgroundSize: "contain",
             backgroundRepeat: "no-repeat",
             backgroundPosition: "center",
@@ -95,26 +95,32 @@ function IDCard({ user }) {
 
             {/* TITLE */}
             <div className="flex-grow-1 text-center text-white">
-              <h2 className="mb-0 fw-bold">Labour Party</h2>
-              <small>Forward Ever!!</small>
+              <h2 className="mb-0 fw-bold">Abia Arise</h2>
+              <small>Arise for a new Abia!!</small>
+              {/* MEMBERSHIP NUMBER - Added below Forward Ever */}
+              <div className="fw-bold" style={{ fontSize: "15px", marginTop: "2px" }}>
+                Membership No: {user.regID || user.RegID}
+              </div>
             </div>
+
+
           </div>
 
           {/* BODY */}
           <div className="row">
             {/* DETAILS */}
-            <div className="col-8 fw-medium text-start px-3">
+            <div className="col-8 fw-medium text-start px-4">
               <div
                 style={{
                   display: "flex",
                   flexDirection: "column",
-                  gap: "2px",
+                  gap: "1px",
                   color: "#404040",
 
                 }}
               >
                
-                {/* ROW  1 */}
+                {/* ROW  1
                 <div style={{ display: "flex" }}>
                   <span>
                     
@@ -135,7 +141,7 @@ function IDCard({ user }) {
                     </span>
                   </span>
                  
-                </div>
+                </div> */}
                 {/* row 2 */}
                
                 <div style={{ display: "flex" }}>
@@ -206,7 +212,7 @@ function IDCard({ user }) {
                 </div>
                 
 
-                {/* new row */}
+                {/* new row - CHANGED FROM NIN TO WARD */}
                 <div style={{ display: "flex" }}>
                   <span>
                     
@@ -221,9 +227,9 @@ function IDCard({ user }) {
                         //textOverflow: "ellipsis",
                         //verticalAlign: "",
                       }}
-                      title={`${user.niN}`}
+                      title={`${user.ward || user.Ward}`}
                     >
-                      {`NIN: ${user.niN}`}
+                      {`Ward: ${user.ward || user.Ward}`}
                     </span>
                   </span>
                  
